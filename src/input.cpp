@@ -90,7 +90,7 @@ bool Input::WndProc(uint32_t message, WPARAM wParam, LPARAM lParam)
         case WM_KEYDOWN: {
             // tilde key down and the previous key state was up
             const auto vsc = MapVirtualKeyEx(static_cast<int32_t>(wParam), MAPVK_VK_TO_VSC, GetKeyboardLayout(0));
-            if ((vsc == 41 || wParam == VK_F1) && (lParam >> 30) == 0) {
+            if ((wParam == VK_F1) && (lParam >> 30) == 0) {
                 EnableInput(!IsInputEnabled());
                 return true;
             }
