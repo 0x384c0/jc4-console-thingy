@@ -88,11 +88,20 @@ bool Input::WndProc(uint32_t message, WPARAM wParam, LPARAM lParam)
 
     switch (message) {
         case WM_KEYDOWN: {
-            // tilde key down and the previous key state was up
+            // console key down and the previous key state was up
             const auto vsc = MapVirtualKeyEx(static_cast<int32_t>(wParam), MAPVK_VK_TO_VSC, GetKeyboardLayout(0));
             if ((wParam == VK_F1) && (lParam >> 30) == 0) {
                 EnableInput(!IsInputEnabled());
                 return true;
+            }
+
+            // quick spawn key down and the previous key state was up
+            if ((wParam == VK_F2) && (lParam >> 30) == 0) {
+                    if (!m_lastSpawnCmdArgument.empty()) {
+                    auto cmd = m_commands["spawn"].get();
+                    cmd->Handler(m_lastSpawnCmdArgument);
+                    return true;
+                }
             }
 
             // handle history navigation
@@ -237,6 +246,9 @@ bool Input::WndProc(uint32_t message, WPARAM wParam, LPARAM lParam)
                         if (m_cmd) {
                             if (m_cmd->Handler(m_cmdArguments)) {
                                 AddToHistory(input_text);
+                                if (m_cmd->GetCommand() == "spawn") {
+                                    m_lastSpawnCmdArgument = m_cmdArguments;
+                                }
                             }
                         } else if (m_fnCommands.size() > 0) {
                             const auto it = m_fnCommands.find(m_cmdText);

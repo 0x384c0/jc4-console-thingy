@@ -26,6 +26,7 @@ class Input : public Singleton<Input>
     int32_t                  m_selectedHint   = -1;
     int32_t                  m_hintPage       = 0;
     bool                     m_controlPressed = false;
+    std::string              m_lastSpawnCmdArgument   = "";
 
     std::unordered_map<std::string, std::unique_ptr<ICommand>> m_commands;
     std::unordered_map<std::string, command_t>                 m_fnCommands;
